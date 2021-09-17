@@ -103,7 +103,3 @@ def success(data, color=None):
         return colored('[+] ' + str(data), 'green')
     else:
         return colored("[+] " + str(data), color)
-
-
-if __name__ == '__main__':
-    print(extracting_tags_attributes(getting_specify_tags(request('https://facebook.com'), 'input'), 'type', 'name'))
