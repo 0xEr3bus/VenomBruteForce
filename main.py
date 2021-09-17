@@ -1,22 +1,16 @@
 import Brute_Force.HTTP_POST.common.common as AS
-from bs4 import BeautifulSoup
 
-
-def getting_tags_attributes(html_data, find_type, find_name):
-    tag_type, tag_name = html_data.get(find_type), html_data.get(find_name)
-    if tag_type != 'hidden':
-        return tag_type, tag_name
-    else:
-        input_type, tag_name = None, None
-        return input_type, tag_name
-
-
-url = 'https://www.github.com/login'
-response = AS.request(url)
-forms = AS.getting_forms(response, 'form')
-# print(forms)
+# url = 'https://facebook.com/login'
+url = 'http://testhtml5.vulnweb.com/#/popular'
+forms = AS.getting_forms(AS.request(url), 'form')
 for form in forms:
+    action, method = (AS.get_form_action_and_method(form))
+    print(AS.success(f'Action: {action}, Method: {method}', 'yellow'))
     inputs = AS.getting_specify_tags(form, 'input')
-    for input_field in inputs:
-        print(input_field)
-# print(getting_tags_attributes(data, 'type', 'name'))
+    tag_types, tag_names, submit = AS.extracting_tags_attributes(inputs, 'type', 'name')
+    for types, names in zip(tag_types, tag_names):
+        print(AS.success(f'Input Type: {types}, Input Name: {names}'))
+    try:
+        print(AS.success(f'Submit Button Name: {submit[0][1]}'))
+    except IndexError:
+        print(AS.error(f'Cannot Find The Submit Input Field Name'))

@@ -34,7 +34,7 @@ def request(url):
         return colored("[-] Cannot established Connection with the give url", 'red')
 
 
-def getting_forms(html_data, tag):
+def getting_forms(html_data, to_find):
     """
     [+] This Function is used to extract specific HTML tag from a given HTML data.
         => Example: <html>
@@ -43,7 +43,7 @@ def getting_forms(html_data, tag):
                         </form>
                     </html>
     """
-    tags = parsing(html_data).find_all(tag)
+    tags = parsing(html_data).find_all(to_find)
     return tags
 
 
@@ -62,28 +62,47 @@ def getting_specify_tags(html_data, tag):
     return tags
 
 
-def extracting_tags_attributes(list_of_tags, tag_types, tag_names):
+def extracting_tags_attributes(list_of_tags, tag_types, tag_names, ignore=None):
     """
     [+] This function is used to extract attributes of give list.
         => Example:
             <input name='pass' type='password'>...</input>      => The attribute of given list, in this case its 'input'
             <input name='email' type='text'>...</input>             This function will extracts two given attributes.
-            <input name='submit_form' type='submit'>...</input>     I.E: type, name
+            <input name='submit_form' type='submit'>...</input>     I.E: type, name, Here Ignore means to ignore any
     """
-    tag_type = []
-    tag_name = []
-    for list_tag in list_of_tags:
-        tag_type.append(list_tag.get(tag_types)), tag_name.append(list_tag.get(tag_names))
-    return tag_type, tag_name
+    if ignore is None:
+        tag_type = []
+        tag_name = []
+        submit_button = []
+        for list_tag in list_of_tags:
+            temp_tag_type, temp_tag_name = list_tag.get(tag_types), list_tag.get(tag_names)
+            if temp_tag_type != 'hidden':
+                if temp_tag_type == 'submit':
+                    submit_button.append((temp_tag_type, temp_tag_name))
+                else:
+                    tag_type.append(temp_tag_type), tag_name.append(temp_tag_name)
+        return tag_type, tag_name, submit_button
 
 
 def get_form_action_and_method(form):
     """
     This method is used specially, its meant to extract form action and the method form uses.
     """
-    action = form.get('action')
-    method = form.get('method')
-    return method, action
+    action, method = form.get('action'), form.get('method')
+    return action, method
+
+
+def error(data):
+    """Returns A Red Error Message!"""
+    return colored('[-] ' + str(data), 'red')
+
+
+def success(data, color=None):
+    if color is None:
+        """Returns A green Success Message!"""
+        return colored('[+] ' + str(data), 'green')
+    else:
+        return colored("[+] " + str(data), color)
 
 
 if __name__ == '__main__':
