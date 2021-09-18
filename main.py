@@ -1,5 +1,5 @@
-import Brute_Force.HTTP_POST.Automated.scraping as AS
+from Brute_Force.HTTP_POST.Automated.start import *
 
 if __name__ == '__main__':
-    url = 'https://github.com/login'
-    AS.main(url)
+    url = 'https://facebook.com/login'
+    Start().run()
