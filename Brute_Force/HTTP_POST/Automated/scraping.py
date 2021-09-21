@@ -36,7 +36,7 @@ def main(url):
                 print(success(f'Input Type: "{types}", Input Name: "{names}"'))
             """
             try/except :
-                Printing Button Name:
+                Printing Submit Input/Button Name:
             """
             try:
                 print(success(f'Submit Button Name: {submit[0][1]}'))
