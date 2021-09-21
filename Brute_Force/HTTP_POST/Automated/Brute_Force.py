@@ -43,3 +43,7 @@ def main():
     fix_color_output()
     passwords = wordlist_build('passwords.txt')
     brute_force('http://192.168.56.101/dvwa/login.php', 'admin', 'username', 'password', 'Login', 'Login failed', passwords)
+
+
+if __name__ == '__main__':
+    main()
