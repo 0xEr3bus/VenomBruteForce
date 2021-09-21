@@ -46,7 +46,7 @@ def main(url):
             """
             Exiting due to more than two inputs fields.
             """
-            print(error(f'More Than 2 inputs Field Found, Please use Manual mode.'))
+            print(error(f'More Than two inputs Field Found, Please use Manual mode.'))
             field = 1
             """
             For more information, printing the inputs in a better format.
