@@ -18,12 +18,14 @@ class Start:
         """Adding option of passwords list. The list of possible password to try."""
         parser.add_option('-l', '--login_name', dest='login_name')
         """Adding option of username. This username must be valid in order to gain password."""
-        parser.add_option('-v', '--verification', dest='verification')
+        parser.add_option('-y', '--verification', dest='verification')
         """ Adding option of verification. 
             Verification of the password: 
                     Example:
                             "Incorrect Credentials" => response of server, means the Credentials are incorrect.
                             If  "Incorrect Credentials" not in response => Login successful"""
+        parser.add_option('-v', '--verbose', dest='verbose', action="store_false")
+        """Verbose Mode: Show Error and Request in real time """
         (options, argument) = parser.parse_args()
         """Parsing The Arguments"""
         """Important Fields =>"""
@@ -31,6 +33,7 @@ class Start:
         self.passwords = options.passwords
         self.login_name = options.login_name
         self.verification = options.verification
+        self.verbose = options.verbose
         """Verification Of This Important Fields:"""
         if self.url is None or self.passwords is None or self.login_name is None or self.verification is None:
             print(error('Proper Arguments Not Given:'))
@@ -51,4 +54,11 @@ class Start:
         return tabulate(my_data, headers=head)
 
     def run(self):
-        main(self.url)
+        if self.verbose is None:
+            main(self.url, self.login_name, self.verification, self.passwords)
+        else:
+            main(self.url, self.login_name, self.verification, self.passwords, self.verbose)
+
+
+if __name__ == '__main__':
+    Start().run()
