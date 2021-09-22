@@ -7,8 +7,15 @@ def banner():  # Simple Banner Of The Program.
     return colored(Figlet(font='standard').renderText('Venom Brute-Force'), 'blue')
 
 
+def main():
+    # python main.py -l admin -p wordlist/passwords.txt -u http://192.168.56.101/dvwa/login.php -v "Login failed"
+    try:
+        print("\n\n" + str(banner()) + "\n\n")
+        Start().run()
+    except KeyboardInterrupt:
+        print(error('Ctrl + C Detected, Quiting...'))
+        sys.exit(0)
+
+
 if __name__ == '__main__':
-    # python main.py -l "admin" -u "https://facebook.com/login" -p /passwords.txt -v "Login Failed"
-    print("\n\n" + str(banner()) + "\n\n")
-    url = 'https://facebook.com/login'
-    Start().run()
+    main()
