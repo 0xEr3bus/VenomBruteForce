@@ -1,3 +1,4 @@
+import sys
 from bs4 import BeautifulSoup
 import requests
 from termcolor import colored
@@ -103,3 +104,24 @@ def success(data, color=None):
         return colored('[+] ' + str(data), 'green')
     else:
         return colored("[+] " + str(data), color)
+
+
+def building_wordlist(path):
+    """
+    This Function takes parameter path; this path parameter is path to the wordlist of password.
+    this will strip and make a list of passwords and return the list.
+    """
+    words = []
+    try:
+        with open(path, 'r') as wordlist:
+            words.append(wordlist.read().strip())
+        return words
+    except FileNotFoundError:
+        print(error('The Given Wordlist Not Found. Check The File Location.'))
+        sys.exit(0)
+    except PermissionError:
+        print(error('The Given File Cannot Be accessed, Permission Error.'))
+        sys.exit(0)
+    except IsADirectoryError:
+        print(error('The Given Wordlist is Not A File. Its a directory.'))
+        sys.exit(0)
