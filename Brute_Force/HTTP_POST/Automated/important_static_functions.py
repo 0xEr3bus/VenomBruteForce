@@ -93,12 +93,12 @@ def get_form_action_and_method(form):
     return action, method
 
 
-def error(data):
+def error(data: str):
     """Returns A Red Error Message!"""
     return colored('[-] ' + str(data), 'red')
 
 
-def success(data, color=None):
+def success(data: str, color: str = None):
     if color is None:
         """Returns A green Success Message!"""
         return colored('[+] ' + str(data), 'green')
@@ -106,22 +106,65 @@ def success(data, color=None):
         return colored("[+] " + str(data), color)
 
 
-def building_wordlist(path):
+def brute_force_request(url: str, data: dict, timeout: int = None):
+    try:
+        if timeout is None:
+            response = requests.post(url, data=data, timeout=10)
+            return response
+        else:
+            response = requests.post(url, data=data, timeout=timeout)
+            return response
+    except requests.exceptions.ConnectionError:
+        print(colored('[-] Hosts seems to be down. Please Verify connection with the host.', 'red'))
+        sys.exit(0)
+
+
+def read(path):
     """
     This Function takes parameter path; this path parameter is path to the wordlist of password.
     this will strip and make a list of passwords and return the list.
     """
     words = []
     try:
-        with open(path, 'r') as wordlist:
-            words.append(wordlist.read().strip())
-        return words
-    except FileNotFoundError:
-        print(error('The Given Wordlist Not Found. Check The File Location.'))
+        with open(path, 'rb') as words_file:
+            words += words_file.readlines()
+
+        print(colored(f"Read in {len(words)} words from {path}", 'yellow'))
+    except IsADirectoryError:
+        print(error('The Given Wordlist is Not A File. Its a directory.'))
         sys.exit(0)
     except PermissionError:
         print(error('The Given File Cannot Be accessed, Permission Error.'))
         sys.exit(0)
-    except IsADirectoryError:
-        print(error('The Given Wordlist is Not A File. Its a directory.'))
+    except FileNotFoundError:
+        print(error('The Given Wordlist Not Found. Check The File Location.'))
+        sys.exit(0)
+    return words
+
+
+def clean_word(word):
+    """
+    This Function Is Used to clean a word. and decodes to UTF-8 or Latin-1
+    """
+    if not word:
+        return
+    try:
+        word = word.strip().decode('utf-8')
+    except UnicodeDecodeError:
+        try:
+            word = word.strip().decode('Latin-1')
+        except UnicodeError:
+            print(error(f'Error In Decoding This Word {word}'))
+            return
+    return word
+
+
+def connection_check(url):
+    try:
+        requests.get(url)
+    except requests.exceptions.ConnectionError:
+        print(colored('[-] Hosts seems to be down. Please Verify connection with the host.', 'red'))
+        sys.exit(0)
+    except requests.exceptions.ReadTimeout:
+        print(error('Time Out Error'))
         sys.exit(0)
