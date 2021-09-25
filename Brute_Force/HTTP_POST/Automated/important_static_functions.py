@@ -1,7 +1,7 @@
 import sys
 from bs4 import BeautifulSoup
 import requests
-from termcolor import colored
+from termcolor import *
 import colorama
 
 
@@ -160,11 +160,23 @@ def clean_word(word):
 
 
 def connection_check(url):
+    """
+    This function is used to perform a simple check if the web page is working and connection can be established.
+    """
     try:
-        requests.get(url)
+        response = requests.get(url)
+        if response.status_code != 200:
+            print(error(f"Error In The Status Code, '{response.status_code}'"))
+            print(colored('[*] If There is a error in status code, u can use "-f" or "--force" to force script.',
+                          'yellow'))
+            cprint('[!] Note: ', color='red', attrs=['bold'])
+            print(colored('\t=> The program may become unstable if force mode is used.', 'red'))
     except requests.exceptions.ConnectionError:
         print(colored('[-] Hosts seems to be down. Please Verify connection with the host.', 'red'))
         sys.exit(0)
     except requests.exceptions.ReadTimeout:
         print(error('Time Out Error'))
         sys.exit(0)
+
+
+connection_check('https://facebook.com/login123')
