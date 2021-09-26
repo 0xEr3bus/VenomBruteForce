@@ -1,9 +1,8 @@
-import sys
 from .important_static_functions import *
-from .Brute_Force import brute_force
+from .Brute_Force import BruteForce
 
 
-def extraction(form, url, username, verification, passwords_list, verbose=None):
+def extraction(form, passwords_list, threads=None, verbose=None):
     """
     Declaring Password Field and Username Field as Empty.
     """
@@ -48,11 +47,9 @@ def extraction(form, url, username, verification, passwords_list, verbose=None):
                 submit = ''
                 print(success(f'Submit Button Name: {submit}\n\n', 'blue'))
                 if verbose is None:
-                    brute_force(url, username, username_field_name, password_field_name, submit, verification,
-                                passwords_list)
+                    BruteForce(passwords_list, username_field_name, password_field_name, submit, threads).brute_force()
                 else:
-                    brute_force(url, username, username_field_name, password_field_name, submit, verification,
-                                passwords_list, verbose)
+                    BruteForce(username_field_name, password_field_name, submit, passwords_list, verbose)
         except IndexError:
             print(error(f'Cannot Find The Submit Input Field Name'))
     else:
@@ -70,7 +67,7 @@ def extraction(form, url, username, verification, passwords_list, verbose=None):
         sys.exit(0)
 
 
-def main(url, username, verification, passwords_list, verbose=None):
+def main(url, username, verification):
     """
     Extracting Forms and storing in a list, called 'forms'
     """
@@ -80,20 +77,20 @@ def main(url, username, verification, passwords_list, verbose=None):
     """
     if len(forms) == 1:
         for form in forms:
-            extraction(form, url, username, verification, passwords_list)
+            extraction(form, url, username, verification)
     elif len(forms) > 1:
         form_index = 0
         print(colored(f'[!] More Than One Form Found, Total Forms: {len(forms)}', 'red'))
         for form in forms:
             main_line_of_forms = str(form).split('>')[0]
             print(colored(f"[+] Form Index: [{form_index}]\n\tForm Data:", 'green') +
-                  colored(f"\n\t{main_line_of_forms}",'yellow'))
+                  colored(f"\n\t{main_line_of_forms}", 'yellow'))
             form_index += 1
         print((colored('[+] Index Of Form To Search: ', 'blue')))
         form_to_search = input('')
         try:
             form = forms[int(form_to_search)]
-            extraction(form, url, username, verification, passwords_list, verbose=None)
+            extraction(form, url, username, verification)
         except IndexError:
             print(colored(f'[-] Form With Index {form_to_search} Not Found.', 'red'))
             sys.exit(0)

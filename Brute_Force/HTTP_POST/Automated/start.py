@@ -16,6 +16,8 @@ class Start:
         """ Adding option of URL. The URl which has to be attacked"""
         parser.add_option('-p', '--passwords', dest='passwords')
         """Adding option of passwords list. The list of possible password to try."""
+        parser.add_option('-t', '--threads', dest='threads')
+        """No of threads to be used."""
         parser.add_option('-l', '--login_name', dest='login_name')
         """Adding option of username. This username must be valid in order to gain password."""
         parser.add_option('-y', '--verification', dest='verification')
@@ -30,6 +32,7 @@ class Start:
         """Parsing The Arguments"""
         """Important Fields =>"""
         self.url = options.url
+        self.threads = options.threads
         self.passwords = options.passwords
         self.login_name = options.login_name
         self.verification = options.verification
@@ -49,15 +52,22 @@ class Start:
             [colored("Username", 'yellow'), colored("-l", 'green'), colored("A valid Username Not Given.", 'red')],
             [colored("Passwords", 'yellow'), colored("-p", 'green'), colored("List Of Possible Passwords.", 'red')],
             [colored("URL", 'yellow'), colored("-u", 'green'), colored("Website Want to Attack.", 'red')],
+            [colored("Threads", 'yellow'), colored("-t", 'green'), colored("No if Threads To Use", 'red')],
             [colored("Verification", 'yellow'), colored("-v", 'green'), colored("To Verify if login is made", 'red')]]
         head = [colored("Name", 'blue'), colored("Arguments", 'blue'), colored("Help", 'blue')]
         return tabulate(my_data, headers=head)
 
     def run(self):
         if self.verbose is None:
-            main(self.url, self.login_name, self.verification, self.passwords)
+            if self.threads is None:
+                self.threads = 10
+                main(self.url, self.login_name, self.verification, self.passwords, self.threads)
+            else:
+                main(self.url, self.login_name, self.verification, self.passwords, self.threads)
         else:
-            main(self.url, self.login_name, self.verification, self.passwords, self.verbose)
+            if self.threads is None:
+                self.threads = 10
+                main(self.url, self.login_name, self.verification, self.passwords, self.threads, self.verbose)
 
 
 if __name__ == '__main__':
