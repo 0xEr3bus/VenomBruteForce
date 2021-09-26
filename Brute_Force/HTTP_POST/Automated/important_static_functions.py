@@ -177,6 +177,3 @@ def connection_check(url):
     except requests.exceptions.ReadTimeout:
         print(error('Time Out Error'))
         sys.exit(0)
-
-
-connection_check('https://facebook.com/login123')
