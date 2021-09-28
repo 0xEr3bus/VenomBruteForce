@@ -1,4 +1,5 @@
-from Brute_Force.HTTP_POST.Automated.Brute_Force import *
+# from Brute_Force.HTTP_POST.Automated.Brute_Force import *
+from Brute_Force.HTTP_POST.Manual.main_attack import *
 from pyfiglet import Figlet
 
 
@@ -8,8 +9,9 @@ def banner():  # Simple Banner Of The Program.
 
 
 def main():
-    print("\n\n" + str(banner()) + "\n\n")
-    BruteForce().run()
+    print(str(banner()) + "\n\n")
+    # BruteForce().start()
+    BruteForceManual().fields_verification()
 
 
 if __name__ == '__main__':
