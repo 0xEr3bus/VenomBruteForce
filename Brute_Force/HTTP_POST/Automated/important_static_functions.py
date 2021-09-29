@@ -93,12 +93,12 @@ def get_form_action_and_method(form):
     return action, method
 
 
-def error(data: str):
+def error(data):
     """Returns A Red Error Message!"""
     return colored('[-] ' + str(data), 'red')
 
 
-def success(data: str, color: str = None):
+def success(data, color=None):
     if color is None:
         """Returns A green Success Message!"""
         return colored('[+] ' + str(data), 'green')
@@ -106,7 +106,7 @@ def success(data: str, color: str = None):
         return colored("[+] " + str(data), color)
 
 
-def brute_force_request(url: str, data: dict, timeout: int = None):
+def brute_force_request(url, data, timeout=None):
     try:
         if timeout is None:
             response = requests.post(url, data=data, timeout=10)
