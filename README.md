@@ -8,4 +8,4 @@
 - [ ] Getting CSRF token. A bit challenging.
 
 
-**Warning:** Threads should be used mindfully, the more request/seconds the more website will lose the control. The Program will crash. Recommend threads for a CTFs are 15-30. For real pentest, threads depands on the server, the more powerfull server, more threads can be used.
+**Warning:** Threads should be used mindfully, the more request/seconds the more website will lose the control. The Program will crash. Recommend threads for a CTFs are 15-30. For real pentest, threads depands on the server, the more powerful server, more threads can be used.
