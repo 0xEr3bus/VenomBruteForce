@@ -55,7 +55,7 @@ class BruteForceManual:
         head = [colored("Name", 'blue'), colored("Arguments", 'blue'), colored("Help", 'blue')]
         print(tabulate(my_data, headers=head) + "\n")
         cprint('[!] Proper Usage: ', color='cyan', attrs=['bold'])
-        print(colored('''\t./bruteforce -l admin -p "/usr/share/wordlists/rockyou.txt" \
+        print(colored('''\t./bruteforce man -l admin -p "/usr/share/wordlists/rockyou.txt" \
 -u "http://192.168.56.101/dvwa/login.php" -t 15 -y "Login failed" -f username:password:Login''', 'cyan'))
         cprint('[!] Note: ', color='cyan', attrs=['bold'])
         print(colored("\tFormat of important fields is always, username_field:password_field:submit_button", 'cyan'))

@@ -2,7 +2,7 @@ import optparse
 import threading
 import time
 from tabulate import tabulate
-from important_static_functions import *
+from .important_static_functions import *
 
 
 class BruteForce:
@@ -136,12 +136,18 @@ class BruteForce:
         """
         forms = getting_forms(request(self.url), 'form')
         """
-        Iterating over each form.
+        Verifying the length of forms.
         """
         if len(forms) == 1:
+            """
+            Iterating over each form.
+            """
             for form in forms:
                 self.extraction(form)
         elif len(forms) > 1:
+            """
+            If the length is greater than 1. Then option of using which form to use. 
+            """
             form_index = 0
             print(colored(f'[!] More Than One Form Found, Total Forms: {len(forms)}', 'red'))
             for form in forms:
@@ -169,16 +175,16 @@ class BruteForce:
         response = brute_force_request(self.url, data=data, timeout=5)
         if self.verification in response.content.decode('utf-8'):
             if self.verbose is not None:
-                print(colored(f'\rWorking On {number}\t\tPassword Invalid "{word}"\n'), end='')
+                print(f'\rWorking On {number}\t\tPassword Invalid "{word}"\n', end='')
             else:
                 pass
         else:
             self.end = time.time()
             print(f'\rWorking On {number}\t\tPassword Found "{word}"\n', end='')
-            print(colored(f"\r[*] Total time - {self.end - self.start} seconds.\n", 'yellow'), end='')
             self.creds_found = True
             time.sleep(3)
             print("\n\n")
+            print(colored(f"[*] Total time - {self.end - self.start} seconds.\n", 'yellow'))
             print(colored(f"Credentials for ", 'blue') + colored(f"{self.url}\n", 'green') +
                   colored(f"Username: ", 'blue') + colored(f"{self.username}\n", 'green') +
                   colored("Password: ", 'blue') + colored(f"{word}", 'green'))
