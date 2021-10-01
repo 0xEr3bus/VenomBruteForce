@@ -1,4 +1,4 @@
-# from Brute_Force.HTTP_POST.Automated.Brute_Force import *
+from Brute_Force.HTTP_POST.Automated.Brute_Force import *
 from Brute_Force.HTTP_POST.Manual.main_attack import *
 from pyfiglet import Figlet
 
@@ -9,9 +9,15 @@ def banner():  # Simple Banner Of The Program.
 
 
 def main():
-    print(str(banner()) + "\n\n")
-    # BruteForce().start()
-    BruteForceManual().fields_verification()
+    print(str(banner()) + "\n")
+    try:
+        if sys.argv[1] == 'man':
+            BruteForceManual().brute_force()
+        elif sys.argv[1] == 'auto':
+            BruteForce().start()
+    except IndexError:
+        print(colored("Available Modes\n\t Automated: args => auto (Usage: ./bruteforce auto)\n\t "
+                      "Manual: args => man (Usage: ./bruteforce man)", 'cyan'))
 
 
 if __name__ == '__main__':
