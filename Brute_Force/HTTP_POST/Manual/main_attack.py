@@ -66,69 +66,6 @@ class BruteForceManual:
         self.password_field = input_fields[1]
         self.submit_field = input_fields[2]
 
-    def checking_fields(self, forms):
-        """Extracting forms fro the give HTML data."""
-        for form in forms:
-            """Iterating Over each form."""
-            inputs_field = getting_specify_tags(form, 'input')
-            """Finding inputs filed from each form."""
-            tag_types, tag_names, submit = extracting_tags_attributes(inputs_field, 'type', 'name')
-            if len(tag_types) < 3 and len(tag_names) < 3:
-                self.getting_fields_from_commandline_input()
-                for types, names in zip(tag_types, tag_names):
-                    if types == 'password':
-                        if names == self.password_field:
-                            print(colored(f"[+] Password Field Matches\nScraped: {names}, User Input: "
-                                          f"{self.password_field}", 'green'))
-                        else:
-                            print(colored(f'[-] Cannot Find the give field in the form, {self.password_field}', 'red'))
-                            sys.exit(0)
-                    else:
-                        if names == self.username_field:
-                            print(colored(f"[+] Password Field Matches\nScraped: {names}, User Input: "
-                                          f"{self.username_field}", 'green'))
-                        else:
-                            print(colored(f'[-] Cannot Find the give field in the form, {self.username_field}', 'red'))
-                            sys.exit(0)
-                if submit[0][1] == self.submit_field:
-                    print(colored(f"[+] Submit Field Matches\nScraped: {submit[0][1]}, User Input: "
-                                  f"{self.submit_field}", 'green'))
-                else:
-                    print(colored(f'[-] Cannot Find the give field in the form, {self.submit_field}', 'red'))
-                    sys.exit(0)
-
-    def fields_verification(self):
-        """
-        This method is use to verify, if the give username, password, submit, are present in html data.
-        """
-        bs4_parsed_data = request(self.url)
-        """Parsing HTML code for bs4."""
-        forms = getting_forms(bs4_parsed_data, 'form')
-        if len(forms) == 1:
-            self.checking_fields(forms)
-        else:
-            """
-            If the length is greater than 1. Then option of using which form to use. 
-            """
-            form_index = 0
-            print(colored(f'[!] More Than One Form Found, Total Forms: {len(forms)}', 'red'))
-            for form in forms:
-                main_line_of_forms = str(form).split('>')[0]
-                print(colored(f"[+] Form Index: [{form_index}]\n\tForm Data:", 'green') +
-                      colored(f"\n\t{main_line_of_forms}", 'yellow'))
-                form_index += 1
-            print((colored('[+] Index Of Form To Search: ', 'blue')))
-            form_to_search = input('')
-            try:
-                form = forms[int(form_to_search)]
-                self.checking_fields(form)
-            except IndexError:
-                print(colored(f'[-] Form With Index {form_to_search} Not Found.', 'red'))
-                sys.exit(0)
-            except ValueError:
-                print(colored('[-] Integer Required.', 'red'))
-                sys.exit(0)
-
     def proper_response(self, data, word, number):
         if self.creds_found:
             return
@@ -151,7 +88,6 @@ class BruteForceManual:
 
     def brute_force(self):
         connection_check(self.url)
-        self.fields_verification()
         self.getting_fields_from_commandline_input()
         print(self.username_field, self.password_field, self.submit_field)
         number = 1
@@ -168,7 +104,7 @@ class BruteForceManual:
             thread = threading.Thread(target=self.proper_response, args=(data, word, number))
             self.threads.append(thread)
             try:
-                while threading.activeCount() > int(self.threads_num) + 1:
+                while threading.active_count() > int(self.threads_num) + 1:
                     continue
             except KeyboardInterrupt:
                 sys.exit(0)
