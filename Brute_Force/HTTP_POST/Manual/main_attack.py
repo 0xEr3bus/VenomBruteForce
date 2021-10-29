@@ -7,9 +7,6 @@ import threading
 
 class BruteForceManual:
     threads = []
-    username_field = ''
-    password_field = ''
-    submit_field = ''
 
     def __init__(self):
         parser = optparse.OptionParser()

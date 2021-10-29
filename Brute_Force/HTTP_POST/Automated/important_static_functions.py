@@ -100,13 +100,17 @@ def error(data):
 
 def success(data, color=None):
     if color is None:
-        """Returns A green Success Message!"""
+        """Returns a Green Success Message!"""
         return colored('[+] ' + str(data), 'green')
     else:
+        """Returns a Color Success Message!"""
         return colored("[+] " + str(data), color)
 
 
 def brute_force_request(url, data, timeout=None):
+    """
+    This method is used to verify if the given URL is up.
+    """
     try:
         if timeout is None:
             response = requests.post(url, data=data, timeout=10)
