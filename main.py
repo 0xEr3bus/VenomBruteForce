@@ -14,7 +14,7 @@ def main():
         if sys.argv[1] == 'man':
             BruteForceManual().brute_force()
         elif sys.argv[1] == 'auto':
-            BruteForce().start()
+            BruteForce().main()
     except IndexError:
         print(colored("Available Modes\n\t Automated: args => auto (Usage: ./bruteforce auto)\n\t "
                       "Manual: args => man (Usage: ./bruteforce man)", 'cyan'))

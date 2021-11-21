@@ -74,15 +74,19 @@ def extracting_tags_attributes(list_of_tags, tag_types, tag_names, ignore=None):
     if ignore is None:
         tag_type = []
         tag_name = []
-        submit_button = []
+        check_box = []
         for list_tag in list_of_tags:
             temp_tag_type, temp_tag_name = list_tag.get(tag_types), list_tag.get(tag_names)
             if temp_tag_type != 'hidden':
-                if temp_tag_type == 'submit':
-                    submit_button.append((temp_tag_type, temp_tag_name))
+                if temp_tag_type == "checkbox":
+                    tag_of_id = getting_id(list_tag)
+                    if tag_of_id is True:
+                        check_box.append((temp_tag_type, tag_of_id))
+                    else:
+                        check_box.append((temp_tag_type, temp_tag_name))
                 else:
                     tag_type.append(temp_tag_type), tag_name.append(temp_tag_name)
-        return tag_type, tag_name, submit_button
+        return tag_type, tag_name
 
 
 def get_form_action_and_method(form):
@@ -181,3 +185,56 @@ def connection_check(url):
     except requests.exceptions.ReadTimeout:
         print(error('Time Out Error'))
         sys.exit(0)
+
+
+def getting_id(list_of_tags):
+    """
+    This function is used to get the id of the tag.
+    """
+    for tag in list_of_tags:
+        id_tag = tag.get('id')
+        if id_tag is not None:
+            return id_tag
+        else:
+            return False
+
+
+def getting_submit_input(list_of_tags):
+    """
+    This function is used to get the submit button of the form.
+    """
+    submit_input = []
+    temp_submit_input = []
+    for tag in list_of_tags:
+        temp_tag_type, temp_tag_name = tag.get('type'), tag.get('name')
+        if temp_tag_type == 'submit':
+            submit_input.append((temp_tag_name, temp_tag_type))
+    return submit_input
+
+
+def getting_button_id(form):
+    """
+    This function is used to get the id of the button.
+    """
+    buttons = getting_specify_tags(form, 'button')
+    tag_types, tag_name = extracting_tags_attributes(buttons, 'type', 'class')
+    if tag_types == 'submit':
+        if tag_name is None:
+            return tag_types, tag_name == ''
+        return tag_types, tag_name
+    else:
+        return tag_types is False, tag_name is False
+
+
+def getting_check_box(list_of_tags, tag_types, tag_names):
+    """
+    This function is used to get the check boxes in the form.
+    """
+    buttons = []
+    for tags in list_of_tags:
+        tag_types, tag_name = tags.get(tag_types), tags..get(tag_names)
+        buttons.append((tag_types, tag_name))
+        # if tag_types == 'checkbox':
+    return buttons
+        # else:
+        #     return tag_types is False, tag_name is False

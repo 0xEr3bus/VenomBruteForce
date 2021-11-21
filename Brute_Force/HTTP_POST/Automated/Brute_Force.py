@@ -82,10 +82,12 @@ class BruteForce:
         # Extracting all inputs tag, from form.
         # """
         inputs = getting_specify_tags(form, 'input')
+        buttons = getting_specify_tags(form, 'button')
         # """
         # Extracting Tag Type and Name, storing  in variable, 'tag_type', and 'tag_name'
         # """
         tag_types, tag_names = extracting_tags_attributes(inputs, 'type', 'name')
+        check_box = getting_check_box(buttons, 'type', 'name')
         # """
         # Condition ->
         #    Checking length of tag_type and tag_name.
@@ -101,10 +103,10 @@ class BruteForce:
                     username_field_name, self.username_field = names, names
             print(success(f'Password Field: "{password_field_name}"'))
             print(success(f'Username Field: "{username_field_name}"'))
-            # try:
-            # print(success(f'Checkbox: "{check_box[0][1]}"')
-            # except IndexError:
-            #   print(success(f'[+] No checkbox found'))
+            try:
+                print(success(f'Checkbox: "{check_box}"'))
+            except IndexError:
+                print(success(f'[+] No checkbox found'))
             # """
             # try/except :
             #    Printing Submit Input/Button Name:
@@ -121,8 +123,11 @@ class BruteForce:
                 # self.brute_force()
             except IndexError:
                 print(error(f'Cannot Find The Submit Input Field Name'))
-                tag_types, tag_names, check_box = getting_button(form)
-                print(success(f"Submit Button Name => {tag_names}"))
+                button_type, button_name = getting_button_id(form)
+                if (button_type, button_name) == (False, False):
+                    print(error("Cannot Find The Submit Button Field ID."))
+                else:
+                    print(success(f"Submit Button ID => {button_name}"))
         else:
             # """
             # Exiting due to more than two inputs fields.
@@ -297,6 +302,4 @@ class BruteForce:
 if __name__ == '__main__':
     fix_color_output()  # Fix Color Output in windows/linux.
     BruteForce().main()
-    # """
-    # -l admin -p "../../../Wordlist/passwords1.txt" -u "http://192.168.56.101/dvwa/login.php" -t 15 -y "Login
-    # failed" -v """
+    # -l admin -p "../../../Wordlist/passwords1.txt" -u "http://192.168.56.101/dvwa/login.php" -t 15 -y "Login failed"
